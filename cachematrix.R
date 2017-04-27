@@ -23,7 +23,7 @@ makeCacheMatrix <- function(sp_mtrx = matrix()) {
          getinv = getinv)
 }
 
-
+## Function to find matrix inverse if it has not already been calculated
 cacheSolve <- function(x, ...) {
     MI <- x$getinv()
     
