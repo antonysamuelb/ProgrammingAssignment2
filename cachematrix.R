@@ -1,60 +1,48 @@
-## Code to invert a matrix in a fast manner 
+## Function to find inverse and access it 
+# from Cache if it is readily available
 
 
-## function to create list of functions that can
-## get and set the matrix as well as its inverse
+rm(list = ls())
+setwd("F:\\1 Studies\\ML\\Coursera\\2 R programming\\wk 3\\hub\\ProgrammingAssignment2")
 
-#x1 - matrix
-#x2 - inverse of matrix
-
-makeCacheMatrix <- function(x1 = matrix()) {
+## Function to get and set special matrix and its inverse
+## from and to the Cache
+makeCacheMatrix <- function(sp_mtrx = matrix()) {
     
-    
-    x2 <- NULL
-    set <- function(matrx) {
- 
-        x1 <<- matrx
-        x2 <<- NULL
+    mtrx_inv <- NULL
+    set <- function(y) {
+        sp_mtrx <<- y
+        mtrx_inv <<- NULL
     }
-
-    
-    get <- function() x1
-    setinv <- function(matinv) x2 <<- matinv
-    getinv <- function() x2
-    
-    
+    get <- function() sp_mtrx
+    setinv <- function(m_inv) mtrx_inv <<- m_inv
+    getinv <- function() mtrx_inv
     
     list(set = set, get = get,
          setinv = setinv,
          getinv = getinv)
-    
-    
-
 }
 
 
-## solve to obtain inverse of a matrix if inverse has not been calculated. 
-## If it has been calculated, load that value.
-
-
-cacheSolve <- function(x,  ...) {
+cacheSolve <- function(x, ...) {
+    MI <- x$getinv()
     
-    matrx <- matrix(c(4,2:9),nrow=3,ncol=3)
-    
-    matrixold <- x$get()
-    print(matrixold)
-    if(!identical(matrx,matrixold)){
-        x$set(matrx)
+    if(!is.null(MI)) {
+        message("getting cached Matrix Inverse")
+        return(MI)
     }
-    
-    matinv <- x$getinv()
-    if(!is.null(matinv)) {
-
-        message("getting matrix inverse from cached data")
-        return(matinv)
-    }
-    matrx <- x$get()
-    matinv <- solve(matrx)
-    x$setinv(matinv)
-    
+    M <- x$get()
+    MI <- solve(M)
+    x$setinv(MI)
+    MI
 }
+
+## For Console Use! 
+set.seed(81)
+A <- matrix(sample(100,100),nrow =10, ncol =10)
+aCM <- makeCacheMatrix(A)
+aCM$get()
+aCM$getinv()
+aCM$set(A)
+cacheSolve(aCM)
+
